@@ -139,37 +139,40 @@ class Map:
         
     def set_stage2(self, from_):
         if from_ == 1:
+            self.stage = 2
             self.mario.set_position([15, 150], self.stage)
         else:
+            self.stage = 2
             self.mario.set_position([160, 150], self.stage)
 
         self.mushrooms = []
         self.coins = [Coin([100, 70])]
         self.pipes = [Pipe([80, 130])]
-        self.stage = 2
         
         
     def set_stage3(self, from_):
         if from_ == 2:
+            self.stage = 3
             self.mario.set_position([15, 150], self.stage)
         else:
+            self.stage = 3
             self.mario.set_position([160, 150], self.stage)
         self.coins = [Coin([100, 70])]
         self.mushrooms = [Mushroom([100, 170])]
         self.pipes = [Pipe([40, 130]), Pipe([140, 130])]
-        self.stage = 3
 
         
     def set_stage4(self, from_):
         if from_ == 3:
+            self.stage = 4
             self.mario.set_position([15, 150], self.stage)
         else:
+            self.stage = 4
             self.mario.set_position([160, 150], self.stage)
 
         self.pipes = [Pipe([130, 130])]
         self.coins = []
         self.mushrooms = [Mushroom([100, 170], moveable=True)]
-        self.stage = 4
 
         
     def set_stage5(self):

@@ -7,6 +7,7 @@ class Mario:
         self.walk1_image = Image.open('./image/mario/walk1.png').convert('RGBA').resize((60, 60))
         self.walk2_image = Image.open('./image/mario/walk2.png').convert('RGBA').resize((60, 60))
         self.jump_image = Image.open('./image/mario/jumping.png').convert('RGBA').resize((60, 60))
+        self.victory_image = Image.open('./image/mario/victory.png').convert('RGBA').resize((120, 200))
         self.appearance = self.stand_image
         self.state = None
         self.position = np.array(position)
@@ -18,7 +19,11 @@ class Mario:
         self.direction = 'right'
         self.life = 1
         self.die_ani_count = 30
-    def set_position(self, position):
+        self.pipe_ani_count = 10
+        self.go_pipe_state = False
+        self.stage = 1
+    def set_position(self, position, stage):
+        self.stage = stage
         self.position = np.array(position)
         self.collision_box = [self.position[0]+15, self.position[1], self.position[0]+45, self.position[1]+60]
     
@@ -30,15 +35,32 @@ class Mario:
             self.position[1] += 15
             
         self.die_ani_count -= 1
+    
+    def go_pipe(self):
+        if self.pipe_ani_count > 0:
+            self.position[1] += 2
             
+        self.pipe_ani_count -= 1
+        
     def move(self, map_info, command = None):
+        if self.state == 'finish':
+            self.appearance = self.victory_image
+            return
+            
         if self.life == 0:
             self.die_animation()
             if self.die_ani_count == 0:
                 self.state = 'die'
                 return
+        
+        if self.state == 'go_pipe':
+            self.go_pipe()
+            if self.pipe_ani_count == 0:
+                self.go_pipe_state = True
+                self.state = 'move'
+                return
             
-        if self.state == 'jump':
+        elif self.state == 'jump':
             if command['left_pressed']:
                 if max(map_info[self.collision_box[0]:self.collision_box[0]+5]) >= self.collision_box[3]:
                     self.position[0] -= 5
@@ -74,6 +96,15 @@ class Mario:
             self.state = 'move'
             self.outline = "#FF0000" #빨강색상 코드!
 
+            if command['down_pressed']:
+                pipe = np.array(map_info[self.collision_box[0]:self.collision_box[2]])
+                check = pipe < 210
+                if check.sum() == len(pipe) and self.collision_box[3] < 170 and self.stage == 4:
+                    print("DDDWOWDNDWODWNODWNWDO")
+                    self.state = 'go_pipe'
+                    
+
+            
             if command['left_pressed']:
                 self.direction = 'left'
                 if max(map_info[self.collision_box[0]:self.collision_box[0]+5]) >= self.collision_box[3]:

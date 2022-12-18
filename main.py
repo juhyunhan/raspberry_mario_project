@@ -15,6 +15,8 @@ def main():
         command = {'move': False, 'up_pressed': False , 'down_pressed': False, 'left_pressed': False, 'right_pressed': False, 'jump_pressed':False}
 
         # 명령어 받기
+        if not display.button_D.value: #left pressed
+            command['down_pressed'] = True
         if not display.button_L.value: #left pressed
             command['left_pressed'] = True
         if not display.button_R.value: #right pressed

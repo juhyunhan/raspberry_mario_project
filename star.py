@@ -1,41 +1,22 @@
 import numpy as np
 from PIL import Image
-class Mushroom:
-    def __init__(self, position, moveable=False):
-        self.appearance = Image.open('./image/obstacles/mushroom.png').convert('RGBA').resize((60,60))
+class Star:
+    def __init__(self, position):
+        self.appearance = Image.open('./image/obstacles/star.png').convert('RGBA').resize((60,60))
         self.value = 10
         self.position = np.array(position)
         self.outline = "#0000FF"
         self.state = 'none'
         self.collision_box = [position[0]+10, position[1]+5, position[0]+45, position[1]+45]
-        self.moveable = moveable
-        self.move_count = 20
         
-    def move(self):
-        if self.moveable:
-            if self.move_count == 0:
-                self.move_count = 20
-            else:  
-                if self.move_count > 10:
-                    self.position[0] -= 2
-                    self.collision_box[0] -= 2
-                    self.collision_box[2] -= 2
-                    
-                elif self.move_count < 10:
-                    self.position[0] += 2
-                    self.collision_box[0] += 2
-                    self.collision_box[2] += 2
-                
-                self.move_count -= 1
     
     def collision_check(self, mario):
         # collision = self.overlap(self.position, mario.collision_box)
         collision = self.overlap(mario.collision_box)
     
         if collision:
-            print("the mushroom is hit")
+            print("the star is hit")
             self.state = 'hit'
-            mario.life = 0
 
     def overlap(self, other_position):
         '''
